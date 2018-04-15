@@ -1,0 +1,131 @@
+//Cristian Benitez
+//OOP
+// Mosaic
+
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JPanel;
+import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.Font;
+import java.util.Random;
+
+
+//Mosaic.java
+        public class Mosaic{
+        public static void main(String[] args) {
+            MosaicFrame MosaicFrame = new MosaicFrame();
+            MosaicFrame.setVisible(true);
+    }
+ }
+ 
+ //MosaicFrame.java
+
+        class MosaicFrame extends JFrame implements ActionListener {
+            /**
+	 * 
+	 */
+        	private static final long serialVersionUID = 1L;
+			private ArrayList<AlphaTiles> tileList;
+            public MosaicFrame()
+    {
+            setSize(500,600);
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            Container contentPane = getContentPane();
+            contentPane.setLayout(new BorderLayout());
+            JPanel buttonPanel = new JPanel();
+            contentPane.add(buttonPanel, BorderLayout.SOUTH);
+            JButton randomize = new JButton("Randomize");
+            buttonPanel.add(randomize);
+            randomize.addActionListener(this);
+            JPanel GridPanel = new JPanel();
+            contentPane.add(GridPanel, BorderLayout.CENTER);
+        
+            //Grid of size 12 x 12
+            GridPanel.setLayout(new GridLayout(12,12));
+            tileList = new ArrayList<AlphaTiles>();
+       
+                for(int i=0; i<144; i++)
+        {
+            AlphaTiles tile = new AlphaTiles();
+            GridPanel.add(tile);
+            tileList.add(tile);
+        }  
+    }
+            public void actionPerformed(ActionEvent e) {
+            	for (AlphaTiles tile:tileList) {
+            		tile.SetRandomValue();
+        }
+            		repaint();
+    }
+ }
+ 
+ 
+       //AlphaTiles.java
+       
+        	class AlphaTiles extends JPanel
+ {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -5983388947521332469L;
+		private int red, green, blue;
+		private String letter;
+        
+        AlphaTiles()
+    {
+        super();
+        SetRandomValue();
+    }
+        final public void SetRandomValue()
+    {
+        red = GetNumberBetween(0,255);
+        green = GetNumberBetween(0,255);
+        blue = GetNumberBetween(0,255);
+       
+    }
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            int panelWidth = getWidth();
+            int panelHeight = getHeight();
+            g.setColor(new Color(red,green,blue));
+       
+        //Fill rectangle if 1 otherwise fill circle
+    
+        if (GetNumberBetween(0,1) == 1)
+            g.fillRect(10, 10, panelWidth-10, panelHeight-10);
+        else
+            g.fillOval(10, 10, panelWidth-10, panelHeight-10);
+            g.setColor(new Color(GetContrastingColor(red),GetContrastingColor(green),GetContrastingColor(blue)));
+        
+        final int fontSize=20;
+        g.setColor(Color.white);
+        g.setFont(new Font("Serif Bold", Font.BOLD, fontSize));
+        int stringX = (panelWidth/2)-1;
+        int stringY = (panelWidth/2)+9;
+       
+        //Get random capital letters from A to Z
+        g.drawString(String.valueOf(GetNumberBetween(65,90))
+                ,stringX,stringY);
+    }
+        private static int GetContrastingColor(int colorIn) {
+        return ((colorIn+128)%256);
+    }
+        private static char GetNumberBetween(int min, int max) {
+        Random myRandom = new Random();
+        return (char)(min + myRandom.nextInt(max-min+1));
+    }
+        public String getLetter() {
+		return letter;
+	}
+        public void setLetter(String letter) {
+		this.letter = letter;
+	}
+ }
